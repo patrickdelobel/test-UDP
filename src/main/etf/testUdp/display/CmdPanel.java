@@ -37,12 +37,20 @@ public class CmdPanel {
         panelCmd.add(startReceiver);
         panelCmd.add(stopReceiver);
 
+        final ScheduledFuture<?>[] senderHandle = new ScheduledFuture<?>[1];
         startServer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Sender sender = new Sender();
-                final ScheduledFuture<?> senderHandle =
+                senderHandle[0] =
                         scheduler.scheduleAtFixedRate(sender, 100, Main.sharedData.getSendEveryMs(), MILLISECONDS);
+            }
+        });
+
+        stopServer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                senderHandle[0].cancel(true);
             }
         });
 

@@ -45,11 +45,11 @@ public class ParamPanel {
         panelParams.add(sendEveryMsTextField, "grow");
 
         addSeparator(panelParams, "Stats");
-        panelParams.add(new JLabel("Send min"));
+        panelParams.add(new JLabel("Send min (us)"));
         panelParams.add(statSendMin, "grow");
-        panelParams.add(new JLabel("Send max"));
+        panelParams.add(new JLabel("Send max (us)"));
         panelParams.add(statSendMax, "grow");
-        panelParams.add(new JLabel("Send avg"));
+        panelParams.add(new JLabel("Send avg (us)"));
         panelParams.add(statSendAvg, "grow");
         panelParams.add(new JLabel("Send count"));
         panelParams.add(statSendCount, "grow");
@@ -62,9 +62,9 @@ public class ParamPanel {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        statSendMin.setText(Long.toString(sendStat.getMin()));
-                        statSendMax.setText(Long.toString(sendStat.getMax()));
-                        statSendAvg.setText("" + round(sendStat.getAvg()));
+                        statSendMin.setText(String.format("%.3f", sendStat.getMin() / 1000f));
+                        statSendMax.setText(String.format("%.3f", sendStat.getMax() / 1000f));
+                        statSendAvg.setText(String.format("%.3f", sendStat.getAvg() / 1000f));
                         statSendCount.setText(Long.toString(sendStat.getCount()));
                     }
                 });

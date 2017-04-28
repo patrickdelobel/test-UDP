@@ -11,6 +11,11 @@ public class Sender implements Runnable {
     final private SharedData sharedData = Main.sharedData;
     private boolean initDone = false;
 
+    public Sender() {
+        sharedData.getSendStat().reset();
+        initDone = false;
+    }
+
     @Override
     public void run() {
         long time = System.nanoTime();
