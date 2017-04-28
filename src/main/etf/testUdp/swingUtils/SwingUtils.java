@@ -3,7 +3,8 @@ package etf.testUdp.swingUtils;
 import javax.swing.*;
 import java.awt.*;
 
-import static com.sun.java.swing.ui.CommonUI.createLabel;
+import static etf.testUdp.swingUtils.CommonUI.createLabel;
+
 
 /**
  * Created by patrick on 28/04/17.
