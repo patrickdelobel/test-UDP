@@ -1,11 +1,13 @@
 package etf.testUdp;
 
 import etf.testUdp.display.MainPanel;
+import etf.testUdp.shared.SharedData;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class Main {
+    public static SharedData sharedData = new SharedData();
 
     public static void main(String[] args) {
         JFrame topFrame = new JFrame("Test jitter");
