@@ -1,6 +1,7 @@
 package etf.testUdp.display;
 
 import etf.testUdp.Main;
+import etf.testUdp.shared.Parameters;
 import etf.testUdp.sound.SimpleSound;
 import etf.testUdp.stat.Stat;
 import net.miginfocom.swing.MigLayout;
@@ -13,7 +14,6 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import static etf.testUdp.swingUtils.SwingUtils.addChangeListener;
 import static etf.testUdp.swingUtils.SwingUtils.addSeparator;
-import static java.lang.Math.round;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
@@ -30,6 +30,11 @@ public class ParamPanel {
     JLabel statSendAvg = new JLabel("-");
     JLabel statSendCount = new JLabel("-");
 
+    JLabel statRecMin = new JLabel("-");
+    JLabel statRecMax = new JLabel("-");
+    JLabel statRecAvg = new JLabel("-");
+    JLabel statRecCount = new JLabel("-");
+
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     private JPanel createPanelParam() {
@@ -45,18 +50,27 @@ public class ParamPanel {
         panelParams.add(sendEveryMsTextField, "grow");
 
         addSeparator(panelParams, "Stats");
-        panelParams.add(new JLabel("Send min (us)"));
+        panelParams.add(new JLabel("Send min (ms)"));
         panelParams.add(statSendMin, "grow");
-        panelParams.add(new JLabel("Send max (us)"));
+        panelParams.add(new JLabel("Send max (ms)"));
         panelParams.add(statSendMax, "grow");
-        panelParams.add(new JLabel("Send avg (us)"));
+        panelParams.add(new JLabel("Send avg (ms)"));
         panelParams.add(statSendAvg, "grow");
         panelParams.add(new JLabel("Send count"));
         panelParams.add(statSendCount, "grow");
+        panelParams.add(new JLabel("Rec min (ms)"));
+        panelParams.add(statRecMin, "grow");
+        panelParams.add(new JLabel("Rec max (ms)"));
+        panelParams.add(statRecMax, "grow");
+        panelParams.add(new JLabel("Rec avg (ms)"));
+        panelParams.add(statRecAvg, "grow");
+        panelParams.add(new JLabel("Rec count"));
+        panelParams.add(statRecCount, "grow");
 
-        sendEveryMsTextField.setText("" + Main.sharedData.getSendEveryMs());
+        sendEveryMsTextField.setText("" + Parameters.getSendEveryMs());
         scheduler.scheduleAtFixedRate(new Runnable() {
             Stat sendStat = Main.sharedData.getSendStat();
+            Stat recStat = Main.sharedData.getReceiveStat();
 
             public void run() {
                 SwingUtilities.invokeLater(new Runnable() {
@@ -66,6 +80,11 @@ public class ParamPanel {
                         statSendMax.setText(String.format("%.3f", sendStat.getMax() / 1000f));
                         statSendAvg.setText(String.format("%.3f", sendStat.getAvg() / 1000f));
                         statSendCount.setText(Long.toString(sendStat.getCount()));
+
+                        statRecMin.setText(String.format("%.3f", recStat.getMin() / 1000f));
+                        statRecMax.setText(String.format("%.3f", recStat.getMax() / 1000f));
+                        statRecAvg.setText(String.format("%.3f", recStat.getAvg() / 1000f));
+                        statRecCount.setText(Long.toString(recStat.getCount()));
                     }
                 });
             }
@@ -76,7 +95,7 @@ public class ParamPanel {
             public void stateChanged(ChangeEvent e) {
                 try {
                     int update = Integer.parseInt(sendEveryMsTextField.getText());
-                    Main.sharedData.setSendEveryMs(update);
+                    Parameters.setSendEveryMs(update);
                 } catch (NumberFormatException e1) {
                     SimpleSound.tone(600, 200, 0.01);
                 }

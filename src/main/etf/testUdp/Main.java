@@ -10,6 +10,9 @@ public class Main {
     public static SharedData sharedData = new SharedData();
 
     public static void main(String[] args) {
+
+        //Thread.currentThread().setPriority(-1);//just below normal
+
         JFrame topFrame = new JFrame("Test jitter");
         topFrame.setMinimumSize(new Dimension(800, 500));
         topFrame.setMaximumSize(new Dimension(1200, 800));

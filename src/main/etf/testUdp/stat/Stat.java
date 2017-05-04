@@ -31,10 +31,11 @@ public class Stat {
     }
 
     synchronized public void nextValue(long value) {
-        count++;
+        System.out.printf("count %d - value %d - avg %f .\n", count, value, avg);
         setMax(value);
         setMin(value);
         avg = (value + avg * (count - 1)) / count;//cumulative moving average discrete
+        count++;
     }
 
     synchronized public long getMin() {
@@ -51,5 +52,9 @@ public class Stat {
 
     synchronized public long getCount() {
         return count;
+    }
+
+    synchronized public void incCount() {
+        count++;
     }
 }
