@@ -7,7 +7,7 @@ public class Parameters {
     static private String channel = "aeron:udp?endpoint=localhost:40123";
     static private int stream = 10;
     static private int fragmentCountLimit = 20;
-    static private int sendEveryMs = 5000;
+    static private int sendEveryMs = 5;
 
     public static int getFragmentCountLimit() {
         return fragmentCountLimit;
