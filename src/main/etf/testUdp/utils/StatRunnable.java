@@ -19,6 +19,10 @@ public abstract class StatRunnable implements Runnable {
 
     abstract public void runCore();
 
+    public Stat getStat() {
+        return stat;
+    }
+
     public boolean handleStat() {
         time = System.nanoTime();
         if (stat.getCount() == 0) {//first time cannot calculate moving average
@@ -26,7 +30,7 @@ public abstract class StatRunnable implements Runnable {
             stat.incCount();
             return true;//to initialize the system properly, just initialized
         } else {
-            stat.nextValue((time - lastTime) / 1000l);
+            stat.update((time - lastTime) / 1000l);
             lastTime = time;
         }
         return false;

@@ -18,25 +18,18 @@
 
     <dependencies>
 
-        <!-- https://mvnrepository.com/artifact/com.esotericsoftware/kryonet -->
-        <!--<dependency>-->
-            <!--<groupId>com.esotericsoftware</groupId>-->
-            <!--<artifactId>kryonet</artifactId>-->
-            <!--<version>2.22.0-RC1</version>-->
-        <!--</dependency>-->
-
-        <!-- https://mvnrepository.com/artifact/io.aeron/aeron-client -->
         <dependency>
             <groupId>io.aeron</groupId>
             <artifactId>aeron-client</artifactId>
             <version>1.2.5</version>
         </dependency>
 
-        <dependency>
-            <groupId>io.aeron</groupId>
-            <artifactId>aeron-all</artifactId>
-            <version>1.2.5</version>
-        </dependency>
+        <!-- load this one once to have the Driver loaded to copy to ./utils -->
+        <!--<dependency>-->
+            <!--<groupId>io.aeron</groupId>-->
+            <!--<artifactId>aeron-all</artifactId>-->
+            <!--<version>1.2.5</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>com.miglayout</groupId>

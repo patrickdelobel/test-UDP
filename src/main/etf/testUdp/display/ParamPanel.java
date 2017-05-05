@@ -27,12 +27,14 @@ public class ParamPanel {
 
     JLabel statSendMin = new JLabel("-");
     JLabel statSendMax = new JLabel("-");
-    JLabel statSendAvg = new JLabel("-");
+    JLabel statSendMAvg = new JLabel("-");
+    JLabel statSendMStd = new JLabel("-");
     JLabel statSendCount = new JLabel("-");
 
     JLabel statRecMin = new JLabel("-");
     JLabel statRecMax = new JLabel("-");
-    JLabel statRecAvg = new JLabel("-");
+    JLabel statRecMAvg = new JLabel("-");
+    JLabel statRecMStd = new JLabel("-");
     JLabel statRecCount = new JLabel("-");
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -54,16 +56,20 @@ public class ParamPanel {
         panelParams.add(statSendMin, "grow");
         panelParams.add(new JLabel("Send max (ms)"));
         panelParams.add(statSendMax, "grow");
-        panelParams.add(new JLabel("Send avg (ms)"));
-        panelParams.add(statSendAvg, "grow");
+        panelParams.add(new JLabel("Send mavg (ms)"));
+        panelParams.add(statSendMAvg, "grow");
+        panelParams.add(new JLabel("Send mstd (ms)"));
+        panelParams.add(statSendMStd, "grow");
         panelParams.add(new JLabel("Send count"));
         panelParams.add(statSendCount, "grow");
         panelParams.add(new JLabel("Rec min (ms)"));
         panelParams.add(statRecMin, "grow");
         panelParams.add(new JLabel("Rec max (ms)"));
         panelParams.add(statRecMax, "grow");
-        panelParams.add(new JLabel("Rec avg (ms)"));
-        panelParams.add(statRecAvg, "grow");
+        panelParams.add(new JLabel("Rec mavg (ms)"));
+        panelParams.add(statRecMAvg, "grow");
+        panelParams.add(new JLabel("Rec mstd (ms)"));
+        panelParams.add(statRecMStd, "grow");
         panelParams.add(new JLabel("Rec count"));
         panelParams.add(statRecCount, "grow");
 
@@ -78,12 +84,14 @@ public class ParamPanel {
                     public void run() {
                         statSendMin.setText(String.format("%.3f", sendStat.getMin() / 1000f));
                         statSendMax.setText(String.format("%.3f", sendStat.getMax() / 1000f));
-                        statSendAvg.setText(String.format("%.3f", sendStat.getAvg() / 1000f));
+                        statSendMAvg.setText(String.format("%.3f", sendStat.getMavg() / 1000f));
+                        statSendMStd.setText(String.format("%.3f", sendStat.getStd() / 1000f));
                         statSendCount.setText(Long.toString(sendStat.getCount()));
 
                         statRecMin.setText(String.format("%.3f", recStat.getMin() / 1000f));
                         statRecMax.setText(String.format("%.3f", recStat.getMax() / 1000f));
-                        statRecAvg.setText(String.format("%.3f", recStat.getAvg() / 1000f));
+                        statRecMAvg.setText(String.format("%.3f", recStat.getMavg() / 1000f));
+                        statRecMStd.setText(String.format("%.3f", recStat.getStd() / 1000f));
                         statRecCount.setText(Long.toString(recStat.getCount()));
                     }
                 });

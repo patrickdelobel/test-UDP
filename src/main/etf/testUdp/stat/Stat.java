@@ -1,12 +1,17 @@
 package etf.testUdp.stat;
 
+import etf.testUdp.shared.Parameters;
+
 /**
  * Created by patrick on 28/04/17.
  */
 public class Stat {
     private long min;
     private long max;
-    private double avg;
+    private double mavg;
+    private double oldMAvg;
+    private double variance;
+    private double oldVariance;
     private long count;
 
     public Stat() {
@@ -16,8 +21,9 @@ public class Stat {
     synchronized public void reset() {
         min = Long.MAX_VALUE;
         max = Long.MIN_VALUE;
-        avg = 0;
+        mavg = 0;
         count = 0;
+        variance = 0;
     }
 
     synchronized public void setMin(long minCandidate) {
@@ -30,11 +36,25 @@ public class Stat {
             max = maxCandidate;
     }
 
-    synchronized public void nextValue(long value) {
-        System.out.printf("count %d - value %d - avg %f .\n", count, value, avg);
+    synchronized public void update(long value) {
         setMax(value);
         setMin(value);
-        avg = (value + avg * (count - 1)) / count;//cumulative moving average discrete
+
+        if (count == 1)
+        {
+            oldMAvg = mavg = value;
+            oldVariance = 0.0;
+        }
+        else
+        {
+            mavg = oldMAvg + (value - oldMAvg)/count;
+            variance = oldVariance + (value - oldMAvg)*(value - mavg);
+
+            // set up for next iteration
+            oldMAvg = mavg;
+            oldVariance = variance;
+        }
+
         count++;
     }
 
@@ -46,8 +66,8 @@ public class Stat {
         return max;
     }
 
-    synchronized public double getAvg() {
-        return avg;
+    synchronized public double getMavg() {
+        return mavg;
     }
 
     synchronized public long getCount() {
@@ -56,5 +76,13 @@ public class Stat {
 
     synchronized public void incCount() {
         count++;
+    }
+
+    synchronized public double getVariance() {
+        return variance / (count-1);
+    }
+
+    synchronized public double getStd() {
+        return Math.sqrt(variance / (count-1));
     }
 }

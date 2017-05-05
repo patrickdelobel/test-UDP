@@ -4,7 +4,8 @@ package etf.testUdp.shared;
  * Created by patrick on 04/05/17.
  */
 public class Parameters {
-    static private String channel = "aeron:udp?endpoint=localhost:40123";
+//    static private String channel = "aeron:udp?endpoint=localhost:40123";
+    static private String channel = "aeron:udp?endpoint=192.168.1.39:40123";
     static private int stream = 10;
     static private int fragmentCountLimit = 20;
     static private int sendEveryMs = 5;
@@ -40,4 +41,5 @@ public class Parameters {
     public static void setSendEveryMs(int sendEveryMs) {
         Parameters.sendEveryMs = sendEveryMs;
     }
+
 }
