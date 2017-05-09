@@ -14,11 +14,11 @@ import static java.lang.Thread.sleep;
  * Created by patrick on 28/04/17.
  */
 public class Sender extends StatRunnable {
-    static final int BUF_SIZE = 64 * 1024;
+    int BUF_SIZE;
     protected Aeron aeron;
     protected Publication publication;
     private static final UnsafeBuffer smallBuffer = new UnsafeBuffer(BufferUtil.allocateDirectAligned(256, 64));
-    private static final UnsafeBuffer bigBuffer = new UnsafeBuffer(BufferUtil.allocateDirectAligned(BUF_SIZE, 64));
+    private static UnsafeBuffer bigBuffer;
 
     public Sender() {
         super(Main.sharedData.getSendStat(), true);
@@ -31,6 +31,9 @@ public class Sender extends StatRunnable {
         // the given channel and stream ID.
         aeron = Aeron.connect(ctx);
         publication = aeron.addPublication(Parameters.getChannel(), Parameters.getStream());
+
+        BUF_SIZE = Parameters.getBufSize();
+        bigBuffer = new UnsafeBuffer(BufferUtil.allocateDirectAligned(BUF_SIZE, 64));
 
         //prefill big buffer with known data
         for (int i = 0; i < BUF_SIZE / 8; i++)

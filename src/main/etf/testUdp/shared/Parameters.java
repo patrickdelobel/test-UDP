@@ -9,6 +9,7 @@ public class Parameters {
     static private int stream = 10;
     static private int fragmentCountLimit = 20;
     static private int sendEveryMs = 5;
+    static int BUF_SIZE = 64 * 1024;
 
     public static int getFragmentCountLimit() {
         return fragmentCountLimit;
@@ -42,4 +43,11 @@ public class Parameters {
         Parameters.sendEveryMs = sendEveryMs;
     }
 
+    public static int getBufSize() {
+        return BUF_SIZE;
+    }
+
+    public static void setBufSize(int bufSize) {
+        BUF_SIZE = bufSize;
+    }
 }

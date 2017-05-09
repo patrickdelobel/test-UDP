@@ -26,15 +26,49 @@
 
         <!-- load this one once to have the Driver loaded to copy to ./utils -->
         <!--<dependency>-->
-            <!--<groupId>io.aeron</groupId>-->
-            <!--<artifactId>aeron-all</artifactId>-->
-            <!--<version>1.2.5</version>-->
+        <!--<groupId>io.aeron</groupId>-->
+        <!--<artifactId>aeron-all</artifactId>-->
+        <!--<version>1.2.5</version>-->
         <!--</dependency>-->
 
         <dependency>
             <groupId>com.miglayout</groupId>
             <artifactId>miglayout-swing</artifactId>
             <version>4.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.knowm.xchart/xchart -->
+        <!--<dependency>-->
+        <!--<groupId>org.knowm.xchart</groupId>-->
+        <!--<artifactId>xchart</artifactId>-->
+        <!--<version>3.3.0</version>-->
+        <!--</dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.0</version>
+        </dependency>
+
+        <!--used by hansolo lib-->
+        <dependency>
+            <groupId>com.github.insubstantial</groupId>
+            <artifactId>trident</artifactId>
+            <version>6.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.jchart2d</groupId>
+            <artifactId>jchart2d</artifactId>
+            <version>3.3.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.jfree/jfreechart -->
+        <dependency>
+            <groupId>org.jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>1.0.19</version>
         </dependency>
 
         <dependency>

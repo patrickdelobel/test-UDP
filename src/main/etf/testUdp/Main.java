@@ -14,8 +14,8 @@ public class Main {
         //Thread.currentThread().setPriority(-1);//just below normal
 
         JFrame topFrame = new JFrame("Test jitter");
-        topFrame.setMinimumSize(new Dimension(800, 500));
-        topFrame.setMaximumSize(new Dimension(1200, 800));
+        topFrame.setMinimumSize(new Dimension(1200, 500));
+        topFrame.setMaximumSize(new Dimension(1600, 1000));
         topFrame.getContentPane().add(new MainPanel().getPanel());
         topFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         topFrame.pack();

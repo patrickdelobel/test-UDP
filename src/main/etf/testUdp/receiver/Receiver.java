@@ -45,7 +45,8 @@ public class Receiver extends StatRunnable {
 ////                System.out.println(String.format("Message from session %d (%d@%d) <<%s>>", header.sessionId(), length, offset, new String(data)));
 //            System.out.println(String.format("Message from session %d (%d@%d)", header.sessionId(), length, offset));
 //        };
-
+        final long[] expectedPacket = new long[1];
+        expectedPacket[0] = 1;
         fragmentHandler = new FragmentAssembler((buffer, offset, length, header) -> {
             handleStat();
 
@@ -53,7 +54,14 @@ public class Receiver extends StatRunnable {
             buffer.getBytes(offset, data);
 
 //                System.out.println(String.format("Message from session %d (%d@%d) <<%s>>", header.sessionId(), length, offset, new String(data)));
-            System.out.println(String.format("Message from session %d (%d@%d), first data %d", header.sessionId(), length, offset, buffer.getLong(0)));
+            long receivedPacket = buffer.getLong(0);
+            if (expectedPacket[0] != receivedPacket) {
+                System.out.println(String.format("Message lost, expected msg %d - received msg %d. Message from session %d (%d@%d) lost before, first data %d",
+                        expectedPacket[0], receivedPacket, header.sessionId(), length, offset, receivedPacket));
+            } else {
+                System.out.print(".");
+            }
+            expectedPacket[0] = receivedPacket + 1;
         });
 //        final AtomicBoolean running = new AtomicBoolean(true);
 
