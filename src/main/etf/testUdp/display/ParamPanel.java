@@ -30,12 +30,15 @@ public class ParamPanel {
     JLabel statSendMAvg = new JLabel("-");
     JLabel statSendMStd = new JLabel("-");
     JLabel statSendCount = new JLabel("-");
+    JLabel statSendRetryCount = new JLabel("-");
+    JLabel statSendErrorCount = new JLabel("-");
 
     JLabel statRecMin = new JLabel("-");
     JLabel statRecMax = new JLabel("-");
     JLabel statRecMAvg = new JLabel("-");
     JLabel statRecMStd = new JLabel("-");
     JLabel statRecCount = new JLabel("-");
+    JLabel statRecErrorCount = new JLabel("-");
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
@@ -62,6 +65,11 @@ public class ParamPanel {
         panelParams.add(statSendMStd, "grow");
         panelParams.add(new JLabel("Send count"));
         panelParams.add(statSendCount, "grow");
+        panelParams.add(new JLabel("Send retry count"));
+        panelParams.add(statSendRetryCount, "grow");
+        panelParams.add(new JLabel("Send error count"));
+        panelParams.add(statSendErrorCount, "grow");
+
         panelParams.add(new JLabel("Rec min (ms)"));
         panelParams.add(statRecMin, "grow");
         panelParams.add(new JLabel("Rec max (ms)"));
@@ -72,6 +80,8 @@ public class ParamPanel {
         panelParams.add(statRecMStd, "grow");
         panelParams.add(new JLabel("Rec count"));
         panelParams.add(statRecCount, "grow");
+        panelParams.add(new JLabel("Rec error count"));
+        panelParams.add(statRecErrorCount, "grow");
 
         sendEveryMsTextField.setText("" + Parameters.getSendEveryMs());
         scheduler.scheduleAtFixedRate(new Runnable() {
@@ -79,21 +89,21 @@ public class ParamPanel {
             Stat recStat = Main.sharedData.getReceiveStat();
 
             public void run() {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        statSendMin.setText(String.format("%.3f", sendStat.getMin() / 1000f));
-                        statSendMax.setText(String.format("%.3f", sendStat.getMax() / 1000f));
-                        statSendMAvg.setText(String.format("%.3f", sendStat.getMavg() / 1000f));
-                        statSendMStd.setText(String.format("%.3f", sendStat.getStd() / 1000f));
-                        statSendCount.setText(Long.toString(sendStat.getCount()));
+                SwingUtilities.invokeLater(() -> {
+                    statSendMin.setText(String.format("%.3f", sendStat.getMin() / 1000f));
+                    statSendMax.setText(String.format("%.3f", sendStat.getMax() / 1000f));
+                    statSendMAvg.setText(String.format("%.3f", sendStat.getMavg() / 1000f));
+                    statSendMStd.setText(String.format("%.3f", sendStat.getStd() / 1000f));
+                    statSendCount.setText(Long.toString(sendStat.getCount()));
+                    statSendRetryCount.setText(Long.toString(sendStat.getRetryCount()));
+                    statSendErrorCount.setText(Long.toString(sendStat.getErrorCount()));
 
-                        statRecMin.setText(String.format("%.3f", recStat.getMin() / 1000f));
-                        statRecMax.setText(String.format("%.3f", recStat.getMax() / 1000f));
-                        statRecMAvg.setText(String.format("%.3f", recStat.getMavg() / 1000f));
-                        statRecMStd.setText(String.format("%.3f", recStat.getStd() / 1000f));
-                        statRecCount.setText(Long.toString(recStat.getCount()));
-                    }
+                    statRecMin.setText(String.format("%.3f", recStat.getMin() / 1000f));
+                    statRecMax.setText(String.format("%.3f", recStat.getMax() / 1000f));
+                    statRecMAvg.setText(String.format("%.3f", recStat.getMavg() / 1000f));
+                    statRecMStd.setText(String.format("%.3f", recStat.getStd() / 1000f));
+                    statRecCount.setText(Long.toString(recStat.getCount()));
+                    statRecErrorCount.setText(Long.toString(recStat.getErrorCount()));
                 });
             }
         }, 1, 1, SECONDS);

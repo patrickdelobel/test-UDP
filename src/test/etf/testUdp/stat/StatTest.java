@@ -54,7 +54,7 @@ public class StatTest {
             data.add((long) (Math.random() * 1000));
 
         for (int i = 0; i < data.size(); i++) {
-            s.update(data.get(i));
+            s.update(data.get(i), 0);
             sum += data.get(i);
             count++;
             System.out.printf("%d %d %f %f %f\n", count, sum(data, count), average(data, count), std(data, count), s.getStd());

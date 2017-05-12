@@ -48,7 +48,7 @@ public class Receiver extends StatRunnable {
         final long[] expectedPacket = new long[1];
         expectedPacket[0] = 1;
         fragmentHandler = new FragmentAssembler((buffer, offset, length, header) -> {
-            handleStat();
+            handleStat(length);
 
             final byte[] data = new byte[length];
             buffer.getBytes(offset, data);
@@ -56,6 +56,7 @@ public class Receiver extends StatRunnable {
 //                System.out.println(String.format("Message from session %d (%d@%d) <<%s>>", header.sessionId(), length, offset, new String(data)));
             long receivedPacket = buffer.getLong(0);
             if (expectedPacket[0] != receivedPacket) {
+                getStat().incErrorCount();
                 System.out.println(String.format("Message lost, expected msg %d - received msg %d. Message from session %d (%d@%d) lost before, first data %d",
                         expectedPacket[0], receivedPacket, header.sessionId(), length, offset, receivedPacket));
             } else {
@@ -81,21 +82,22 @@ public class Receiver extends StatRunnable {
     }
 
     @Override
-    public void runCore() {
-
+    public long runCore() {
 //        final IdleStrategy idleStrategy = new YieldingIdleStrategy();
         final IdleStrategy idleStrategy = new SleepingIdleStrategy(TimeUnit.MILLISECONDS.toNanos(1));
 //        final IdleStrategy idleStrategy = new NoOpIdleStrategy();
         try {
+            final int fragmentCountLimit = Parameters.getFragmentCountLimit();
             while (true)//running.get())
             {
                 //System.out.print("+");
-                idleStrategy.idle(subscription.poll(fragmentHandler, Parameters.getFragmentCountLimit()));
+                idleStrategy.idle(subscription.poll(fragmentHandler, fragmentCountLimit));
             }
         } catch (final Exception ex) {
             LangUtil.rethrowUnchecked(ex);
         }
         System.out.println("Shutting down...");
+        return -1;
     }
 }
 

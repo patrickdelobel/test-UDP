@@ -17,20 +17,20 @@ public abstract class StatRunnable implements Runnable {
         this.automatic = automatic;
     }
 
-    abstract public void runCore();
+    abstract public long runCore();
 
     public Stat getStat() {
         return stat;
     }
 
-    public boolean handleStat() {
+    public boolean handleStat(long packetSizeByte) {
         time = System.nanoTime();
         if (stat.getCount() == 0) {//first time cannot calculate moving average
             lastTime = time;
             stat.incCount();
             return true;//to initialize the system properly, just initialized
         } else {
-            stat.update((time - lastTime) / 1000l);
+            stat.update((time - lastTime) / 1000l, packetSizeByte);
             lastTime = time;
         }
         return false;
@@ -39,10 +39,10 @@ public abstract class StatRunnable implements Runnable {
     @Override
     public void run() {
         if (automatic) {
-            handleStat();
-
             //actual thread work is here
-            runCore();
+            long packetSizeByte=runCore();
+
+            handleStat(packetSizeByte);
 
         } else {
             //actual thread work is here, stat handling is done in the thread itself

@@ -44,7 +44,7 @@ public class CmdPanel {
             @Override
             public Thread newThread(Runnable r) {
                 Thread t = new Thread(r);
-                t.setPriority(Thread.NORM_PRIORITY + 1);
+                t.setPriority(Parameters.getSendReceivePrioRelative());
                 return t;
             }
         };

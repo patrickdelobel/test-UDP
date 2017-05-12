@@ -1,6 +1,5 @@
 package etf.testUdp.display.stats;
 
-import etf.testUdp.shared.Parameters;
 import etf.testUdp.stat.Stat;
 import eu.hansolo.steelseries.gauges.AbstractGauge;
 import eu.hansolo.steelseries.gauges.RadialBargraph;
@@ -16,13 +15,13 @@ public class JRateDisplay extends StatDisplayItem {
 
 
     public JRateDisplay(long displayEveryMs, Stat stat, String uniqueName) {
-        super(displayEveryMs, stat,uniqueName);
+        super(displayEveryMs, stat, uniqueName);
     }
 
     @Override
     public JComponent createChart() {
         Model model = new Model();
-        model.setRange(0, 100);
+        model.setRange(0, 200);
         rateGauge = new RadialBargraph(model);
         rateGauge.setUnitString("Mb/s");
         rateGauge.setTitle(uniqueName);
@@ -31,7 +30,9 @@ public class JRateDisplay extends StatDisplayItem {
 
     @Override
     public void displayNextData() {
-        SwingUtilities.invokeLater(() ->
-                rateGauge.setValue(((1000000f / stat.getMavg()) * Parameters.getBufSize()) / (1024f * 1024f)));
+        SwingUtilities.invokeLater(() -> {
+//            rateGauge.setValue(((1000000f / stat.getMavg()) * Parameters.getBufSize()) / 1024f);
+            rateGauge.setValue(getStat().getAndResetRateKbps()/1024);
+        });
     }
 }

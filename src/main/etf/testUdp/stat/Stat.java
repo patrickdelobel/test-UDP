@@ -1,7 +1,5 @@
 package etf.testUdp.stat;
 
-import etf.testUdp.shared.Parameters;
-
 /**
  * Created by patrick on 28/04/17.
  */
@@ -13,6 +11,10 @@ public class Stat {
     private double variance;
     private double oldVariance;
     private long count;
+    private long errorCount;
+    private long retryCount;
+    private long rateKbs;
+    private long oldRateKbs;
 
     public Stat() {
         reset();
@@ -24,6 +26,10 @@ public class Stat {
         mavg = 0;
         count = 0;
         variance = 0;
+        errorCount = 0;
+        retryCount = 0;
+        rateKbs = 0;
+        oldRateKbs = 0;
     }
 
     synchronized public void setMin(long minCandidate) {
@@ -36,25 +42,26 @@ public class Stat {
             max = maxCandidate;
     }
 
-    synchronized public void update(long value) {
+    synchronized public void update(long value, long packetSizeByte) {
         setMax(value);
         setMin(value);
 
-        if (count == 1)
-        {
+        if (count == 1) {
             oldMAvg = mavg = value;
+//            rateKbs = oldRateKbs = ((long) ((1000000f / value) * (packetSizeByte / 1024f) * 8));
             oldVariance = 0.0;
-        }
-        else
-        {
-            mavg = oldMAvg + (value - oldMAvg)/count;
-            variance = oldVariance + (value - oldMAvg)*(value - mavg);
+        } else {
+            mavg = oldMAvg + (value - oldMAvg) / count;
+            variance = oldVariance + (value - oldMAvg) * (value - mavg);
+
+            rateKbs = oldRateKbs + ((long) ((1000000f / value) * (packetSizeByte / 1024f) * 8) - oldRateKbs) / 10;
+//System.out.print(value);
 
             // set up for next iteration
+            oldRateKbs = rateKbs;
             oldMAvg = mavg;
             oldVariance = variance;
         }
-
         count++;
     }
 
@@ -74,15 +81,38 @@ public class Stat {
         return count;
     }
 
+    synchronized public long getRetryCount() {
+        return retryCount;
+    }
+
+    synchronized public long getErrorCount() {
+        return errorCount;
+    }
+
+    synchronized public long getAndResetRateKbps() {
+        long currentRate = rateKbs;
+        rateKbs = 0;//next time will be null if no more packets received
+        return currentRate;
+    }
+
     synchronized public void incCount() {
         count++;
     }
 
+    synchronized public void incRetryCount() {
+        retryCount++;
+    }
+
+    synchronized public void incErrorCount() {
+        errorCount++;
+        rateKbs = oldRateKbs = 0;
+    }
+
     synchronized public double getVariance() {
-        return variance / (count-1);
+        return variance / (count - 1);
     }
 
     synchronized public double getStd() {
-        return Math.sqrt(variance / (count-1));
+        return Math.sqrt(variance / (count - 1));
     }
 }
