@@ -2,6 +2,7 @@ package com.etf.test.imageLab;
 
 import com.etf.test.testUdp.display.MainPanel;
 import com.etf.test.testUdp.shared.SharedData;
+import org.opencv.core.Core;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,6 +13,9 @@ public class Main {
     public static void main(String[] args) {
 
         //Thread.currentThread().setPriority(-1);//just below normal
+
+        // Load the native library.
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
         JFrame topFrame = new JFrame("Test jitter");
         topFrame.setMinimumSize(new Dimension(1200, 800));

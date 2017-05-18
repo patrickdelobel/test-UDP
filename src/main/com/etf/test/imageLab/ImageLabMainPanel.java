@@ -1,5 +1,7 @@
 package com.etf.test.imageLab;
 
+import com.etf.test.imageLab.filters.AbstractFilter;
+import com.etf.test.imageLab.filters.CannyFilter;
 import com.etf.test.imageLab.filters.HistogramFilter;
 import com.etf.test.imageLab.filters.ImageLoader;
 import net.miginfocom.swing.MigLayout;
@@ -38,6 +40,7 @@ public class ImageLabMainPanel extends JPanel {
         //create filters
         ImageLoader imageLoader = new ImageLoader(panelParameters, panelImageInput, panelImageOutput, null);
         HistogramFilter histogramFilter = new HistogramFilter(panelParameters, panelImageInput, panelImageOutput, imageLoader);
+        CannyFilter cannyFilter = new CannyFilter(panelParameters, panelImageInput, panelImageOutput, histogramFilter);
 
         //create the main panels of the application
         //filers panel
@@ -50,14 +53,22 @@ public class ImageLabMainPanel extends JPanel {
                 ));
         panelFilters.setBorder(new BevelBorder(BevelBorder.LOWERED));
         panelFilters.add(imageLoader.getCommand());
+        panelFilters.add(cannyFilter.getCommand());
         panelFilters.add(histogramFilter.getCommand());
         JButton runAll = new JButton("run all");
-        panelFilters.add(runAll, "push, al right, wrap");
+        panelFilters.add(runAll, "push, al right");
         runAll.addActionListener(e -> {
             imageLoader.displayInput();
             imageLoader.run();
             histogramFilter.run();
+            cannyFilter.run();
             histogramFilter.displayOutput();
+        });
+        JToggleButton zoom = new JToggleButton("zoom");
+        panelFilters.add(zoom, "al right");
+        zoom.addActionListener(e -> {
+            AbstractFilter.toggleZoomMode();
+            //TODO redisplay current tool
         });
 
         //images panel

@@ -1,13 +1,15 @@
 package com.etf.test.imageLab.filters;
 
-import org.bytedeco.javacv.*;
+import org.opencv.core.Mat;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 
-import static org.bytedeco.javacpp.opencv_core.Mat;
-import static org.bytedeco.javacpp.opencv_imgproc.*;
+import static org.opencv.imgproc.Imgproc.COLOR_RGB2GRAY;
+import static org.opencv.imgproc.Imgproc.cvtColor;
+import static org.opencv.imgproc.Imgproc.equalizeHist;
+
+//import static org.bytedeco.javacpp.opencv_core.Mat;
+//import static org.bytedeco.javacpp.opencv_imgproc.*;
 
 /**
  * Created by patrick on 15/05/17.
@@ -28,22 +30,4 @@ public class HistogramFilter extends AbstractFilter {
         }
         equalizeHist(grayImage, outputMat);
     }
-
-//    public void displayInput() {
-//        super.displayInput();
-//
-//        if (previous.outputMat == null)
-//            return;
-//
-//        panelImageInput.add(matToScrollablePanel(previous.outputMat), BorderLayout.CENTER);
-//
-//        panelImageInput.updateUI();
-//    }
-//
-//    public void displayOutput() {
-//        super.displayOutput();
-//
-//        panelImageOutput.add(matToScrollablePanel(outputMat), BorderLayout.CENTER);
-//        panelImageOutput.updateUI();
-//    }
 }
