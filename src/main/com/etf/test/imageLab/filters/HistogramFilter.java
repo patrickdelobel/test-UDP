@@ -1,28 +1,28 @@
 package com.etf.test.imageLab.filters;
 
+import com.etf.test.imageLab.ImageLabMainPanel;
 import org.opencv.core.Mat;
 
 import javax.swing.*;
 
-import static org.opencv.imgproc.Imgproc.COLOR_RGB2GRAY;
-import static org.opencv.imgproc.Imgproc.cvtColor;
-import static org.opencv.imgproc.Imgproc.equalizeHist;
+import java.util.LinkedList;
 
-//import static org.bytedeco.javacpp.opencv_core.Mat;
-//import static org.bytedeco.javacpp.opencv_imgproc.*;
+import static org.opencv.imgproc.Imgproc.*;
+
 
 /**
  * Created by patrick on 15/05/17.
  */
 public class HistogramFilter extends AbstractFilter {
-    public HistogramFilter(JPanel mainCommandPanel, JPanel panelImageInput, JPanel panelImageOutput, AbstractFilter previous) {
-        super(mainCommandPanel, panelImageInput, panelImageOutput, "histogram", previous);
+    public HistogramFilter(JPanel mainCommandPanel, JPanel panelImageInput, JPanel panelImageOutput, LinkedList<AbstractFilter> mainList, ImageLabMainPanel.MousePopupListener mousePopupListener) {
+        super(mainCommandPanel, panelImageInput, panelImageOutput, "histogram", mainList, mousePopupListener);
 
         outputMat = new Mat();
     }
 
     public void run() {
         Mat grayImage = new Mat();
+        AbstractFilter previous = getPrevious();
         if (previous.getOutputMat().channels() == 1) {//already in grey, just duplicate
             grayImage = previous.getOutputMat().clone();
         } else {

@@ -1,29 +1,21 @@
 package com.etf.test.imageLab.filters;
 
-//import org.bytedeco.javacpp.opencv_core;
-//import org.bytedeco.javacpp.opencv_core.IplImage;
-//import org.bytedeco.javacpp.opencv_core.Mat;
-//import org.bytedeco.javacv.Frame;
-//import org.bytedeco.javacv.Java2DFrameConverter;
-//import org.bytedeco.javacv.OpenCVFrameConverter;
-
+import com.etf.test.imageLab.ImageLabMainPanel;
 import org.opencv.core.Mat;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
+import java.util.LinkedList;
 
 /**
  * Created by patrick on 15/05/17.
  */
 public abstract class AbstractFilter {
-//    protected OpenCVFrameConverter.ToIplImage sourceConverter;
-//    protected opencv_core.IplImage iplImage;
     protected Mat outputMat;
 
-    protected AbstractFilter previous;
-    protected JButton command;
+    protected JButton command;//button to show the parameters of the command
     protected JButton runCommand;
     protected JPanel commandPanel;
     protected JPanel mainCommandPanel;
@@ -31,19 +23,41 @@ public abstract class AbstractFilter {
     protected JPanel panelImageOutput;
 
     protected static boolean zoomMode = true;
-
+    String commandLabel;
+    LinkedList<AbstractFilter> mainList;
 
     public JComponent getCommand() {
         return command;
     }
 
-    public AbstractFilter(JPanel mainCommandPanel, JPanel panelImageInput, JPanel panelImageOutput, String commandLabel, AbstractFilter previous) {
+    /**
+     * all filters must be listed here!
+     */
+    public static AbstractFilter createNewFilter(JPanel mainCommandPanel, JPanel panelImageInput, JPanel panelImageOutput,
+                                          String filterClassName, LinkedList<AbstractFilter> mainList,
+                                          ImageLabMainPanel.MousePopupListener mousePopupListener) {
+
+        if (filterClassName.equals(CannyFilter.class.getSimpleName()))
+            return new CannyFilter(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
+        else if (filterClassName.equals(ImageLoader.class.getSimpleName()))
+            return new ImageLoader(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
+        else if (filterClassName.equals(HistogramFilter.class.getSimpleName()))
+            return new HistogramFilter(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
+        else if (filterClassName.equals(CameraLoader.class.getSimpleName()))
+            return new CameraLoader(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
+        else if (filterClassName.equals(BlurFilter.class.getSimpleName()))
+            return new BlurFilter(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
+        else throw new RuntimeException("not implemented");
+    }
+
+    public AbstractFilter(JPanel mainCommandPanel, JPanel panelImageInput, JPanel panelImageOutput,
+                          String commandLabel, LinkedList<AbstractFilter> mainList,
+                          ImageLabMainPanel.MousePopupListener mousePopupListener) {
         this.panelImageInput = panelImageInput;
         this.panelImageOutput = panelImageOutput;
         this.mainCommandPanel = mainCommandPanel;
-        this.previous = previous;
-
-//        sourceConverter = new OpenCVFrameConverter.ToIplImage();
+        this.mainList = mainList;
+        this.commandLabel = commandLabel;
 
         //this is the command going into the "filter's" panel
         command = new JButton(commandLabel);
@@ -51,7 +65,7 @@ public abstract class AbstractFilter {
             if (mainCommandPanel.getComponents().length > 0) {
                 mainCommandPanel.remove(0);
             }
-            mainCommandPanel.add(commandPanel);
+            mainCommandPanel.add(commandPanel, "grow");
             displayInput();
             displayOutput();
             mainCommandPanel.updateUI();
@@ -67,13 +81,25 @@ public abstract class AbstractFilter {
         });
 
         commandPanel.add(runCommand);
+
+        //add in menu listener for popup
+        this.getCommand().addMouseListener(mousePopupListener);
     }
 
     abstract public void run();
 
+    public AbstractFilter getPrevious() {
+        final int indexOfPrevious = mainList.indexOf(this) - 1;
+        if (indexOfPrevious < 0)
+            return null;
+        AbstractFilter previous = mainList.get(indexOfPrevious);
+        return previous;
+    }
+
     public void displayInput() {
         emptyInputDisplay();
 
+        AbstractFilter previous = getPrevious();
         if (previous == null || previous.outputMat == null)
             return;
 
@@ -104,32 +130,26 @@ public abstract class AbstractFilter {
         }
     }
 
-//    public IplImage getIplImage() {
-//        return iplImage;
-//    }
-
     public Mat getOutputMat() {
         return outputMat;
     }
 
     //------------- helpers ---------------
-    public BufferedImage toBufferedImage(Mat matrix){
+    public BufferedImage toBufferedImage(Mat matrix) {
         int type = BufferedImage.TYPE_BYTE_GRAY;
-        if ( matrix.channels() > 1 ) {
+        if (matrix.channels() > 1) {
             type = BufferedImage.TYPE_3BYTE_BGR;
         }
-        int bufferSize = matrix.channels()*matrix.cols()*matrix.rows();
-        byte [] buffer = new byte[bufferSize];
-        matrix.get(0,0,buffer); // get all the pixels
-        BufferedImage image = new BufferedImage(matrix.cols(),matrix.rows(), type);
+        int bufferSize = matrix.channels() * matrix.cols() * matrix.rows();
+        byte[] buffer = new byte[bufferSize];
+        matrix.get(0, 0, buffer); // get all the pixels
+        BufferedImage image = new BufferedImage(matrix.cols(), matrix.rows(), type);
         final byte[] targetPixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
         System.arraycopy(buffer, 0, targetPixels, 0, buffer.length);
         return image;
     }
 
     public JComponent matToScrollablePanel(Mat mat) {
-//        final Frame frame = sourceConverter.convert(mat);
-//        BufferedImage image = new Java2DFrameConverter().getBufferedImage(frame);//must take a new Java2DFrameConverter everytime to avoid duplicating images
         BufferedImage image = toBufferedImage(mat);
 
         JPanel imagePanel = new JPanel() {
@@ -165,4 +185,7 @@ public abstract class AbstractFilter {
         HistogramFilter.zoomMode = zoomMode;
     }
 
+    public String getCommandLabel() {
+        return commandLabel;
+    }
 }
