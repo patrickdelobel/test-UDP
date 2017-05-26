@@ -22,10 +22,11 @@ public class CameraLoader extends AbstractFilter {
 
         videoCapture = new VideoCapture(0);
         if (videoCapture == null)
-            throw new RuntimeException("cannot open camera capture");
+            throw new RuntimeException("cannot create camera capture");
         if (!videoCapture.isOpened()) {
             videoCapture.release();
             videoCapture = null;
+            throw new RuntimeException("cannot open camera capture");
         }
         videoCapture.set(Videoio.CAP_PROP_FRAME_WIDTH, 320);
         videoCapture.set(Videoio.CAP_PROP_FRAME_HEIGHT, 240);

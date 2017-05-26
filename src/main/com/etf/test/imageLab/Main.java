@@ -17,7 +17,7 @@ public class Main {
         // Load the native library.
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-        topFrame = new JFrame("Test jitter");
+        topFrame = new JFrame("Image lab");
         topFrame.setMinimumSize(new Dimension(1200, 800));
         topFrame.getContentPane().add(new ImageLabMainPanel());
         topFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
