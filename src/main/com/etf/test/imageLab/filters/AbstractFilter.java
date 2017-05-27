@@ -1,12 +1,16 @@
 package com.etf.test.imageLab.filters;
 
 import com.etf.test.imageLab.ImageLabMainPanel;
+import com.etf.test.swingUtils.VerticalJLabel;
+import net.miginfocom.swing.MigLayout;
 import org.opencv.core.Mat;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
+import java.io.Serializable;
+import java.util.Hashtable;
 import java.util.LinkedList;
 
 /**
@@ -16,7 +20,7 @@ public abstract class AbstractFilter {
     protected Mat outputMat;
 
     protected JButton command;//button to show the parameters of the command
-    protected JButton runCommand;
+    protected JButton runCommand;//button to activate the filter
     protected JPanel commandPanel;
     protected JPanel mainCommandPanel;
     protected JPanel panelImageInput;
@@ -47,6 +51,23 @@ public abstract class AbstractFilter {
             return new CameraLoader(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
         else if (filterClassName.equals(BlurFilter.class.getSimpleName()))
             return new BlurFilter(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
+        else if (filterClassName.equals(FindContourFilter.class.getSimpleName()))
+            return new FindContourFilter(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
+        else if (filterClassName.equals(NlMeansDenoisingFilter.class.getSimpleName()))
+            return new NlMeansDenoisingFilter(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
+        else if (filterClassName.equals(AdaptiveThresholdFilter.class.getSimpleName()))
+            return new AdaptiveThresholdFilter(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
+        else if (filterClassName.equals(LaplacianFilter.class.getSimpleName()))
+            return new LaplacianFilter(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
+        else if (filterClassName.equals(ThresholdFilter.class.getSimpleName()))
+            return new ThresholdFilter(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
+        else if (filterClassName.equals(ErodeFilter.class.getSimpleName()))
+            return new ErodeFilter(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
+        else if (filterClassName.equals(DilateFilter.class.getSimpleName()))
+            return new DilateFilter(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
+        else if (filterClassName.equals(MorphologyFilter.class.getSimpleName()))
+            return new MorphologyFilter(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
+
         else throw new RuntimeException("not implemented");
     }
 
@@ -62,7 +83,7 @@ public abstract class AbstractFilter {
         //this is the command going into the "filter's" panel
         command = new JButton(commandLabel);
         command.addActionListener(e -> {
-            if (mainCommandPanel.getComponents().length > 0) {
+            while (this.mainCommandPanel.getComponents().length > 0) {
                 mainCommandPanel.remove(0);
             }
             mainCommandPanel.add(commandPanel, "grow");
@@ -72,7 +93,12 @@ public abstract class AbstractFilter {
         });
 
         //this is the specific panel with the parameters and commands for the specific filter
-        commandPanel = new JPanel();
+        commandPanel = new JPanel(new MigLayout(
+                "",
+//                "[100%]",
+                "[30][60%][10%]",
+                ""
+        ));
         runCommand = new JButton("run filter");
         runCommand.addActionListener(e -> {
             displayInput();
@@ -170,6 +196,22 @@ public abstract class AbstractFilter {
         imagePanel.setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
         JScrollPane sp = new JScrollPane(imagePanel);
         return sp;
+    }
+
+
+    protected void setTickLabels(JSlider slider, java.util.List<? extends Serializable> labelValuePairs) {
+        Hashtable labels = new Hashtable();
+        String label = null;
+        int count = 0;
+
+        for (Serializable labelValuePair : labelValuePairs) {
+            if (count % 2 == 0)
+                label = (String) labelValuePair;
+            else
+                labels.put(labelValuePair, new VerticalJLabel(label));
+            count++;
+        }
+        slider.setLabelTable(labels);
     }
 
     public static boolean toggleZoomMode() {

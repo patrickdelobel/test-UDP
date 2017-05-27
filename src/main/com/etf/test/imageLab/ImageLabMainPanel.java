@@ -3,7 +3,6 @@ package com.etf.test.imageLab;
 import com.etf.test.imageLab.filters.AbstractFilter;
 import com.etf.test.imageLab.filters.CameraLoader;
 import com.etf.test.imageLab.filters.DummyFilter;
-import com.etf.test.imageLab.filters.ImageLoader;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -21,7 +20,7 @@ import java.util.LinkedList;
 public class ImageLabMainPanel extends JPanel {
     JPanel panelFilters = new JPanel();
     JPanel panelFiltersGlobalCommands = new JPanel();
-    JPanel panelImages;
+    //    JPanel panelImages;
     JPanel panelImageInput = new JPanel();
     JPanel panelImageOutput = new JPanel();
     JPanel panelParameters = new JPanel();
@@ -35,7 +34,8 @@ public class ImageLabMainPanel extends JPanel {
                 "",
 //                "[100%]",
                 "[90%][10%]",
-                "[5%:10%:20%][5%:10%:20%][30%:80%:100%]"
+//                "[10%:10%:20%][30%:30%:80%][30%:80%:100%]"
+                "[20%][30%:60%:80%]"
         ));
 
         //create parameters panel
@@ -91,11 +91,21 @@ public class ImageLabMainPanel extends JPanel {
 //        CameraLoader cameraLoader = new CameraLoader(panelParameters, panelImageInput, panelImageOutput, filters, mousePopupListener);
 //        filters.add(cameraLoader);
 
-        ImageLoader inp = new ImageLoader(panelParameters, panelImageInput, panelImageOutput, filters, mousePopupListener);
-        filters.add(inp);
+//        ImageLoader inp = new ImageLoader(panelParameters, panelImageInput, panelImageOutput, filters, mousePopupListener);
+//        filters.add(inp);
+
+        java.util.List<String> predef1 = Arrays.asList("ImageLoader", "BlurFilter", "CannyFilter", "FindContourFilter");
+        java.util.List<String> predef2 = Arrays.asList("CameraLoader", "BlurFilter", "LaplacianFilter");
+        java.util.List<String> predef3 = Arrays.asList("ImageLoader", "BlurFilter", "LaplacianFilter");
+        for (String filter : predef3) {
+            filters.add(AbstractFilter.createNewFilter(panelParameters, panelImageInput, panelImageOutput, filter, filters, mousePopupListener));
+        }
 
         JMenuItem item;
-        for (String filterName : Arrays.asList("BlurFilter", "CannyFilter", "ImageLoader", "HistogramFilter", "CameraLoader")) {
+        for (String filterName : Arrays.asList(
+                "AdaptiveThresholdFilter", "BlurFilter", "CannyFilter", "DilateFilter", "ErodeFilter", "FindContourFilter", "HistogramFilter",
+                "LaplacianFilter", "MorphologyFilter", "NlMeansDenoisingFilter", "ThresholdFilter",
+                "CameraLoader", "ImageLoader")) {
             insertBefore.add(item = new JMenuItem(filterName));
             item.addActionListener(menuListener);
             insertAfter.add(item = new JMenuItem(filterName));
@@ -150,15 +160,14 @@ public class ImageLabMainPanel extends JPanel {
         });
 
         //images panel
-        panelImages = new JPanel();
-        panelImages.setLayout(
-                new MigLayout(
-                        "",
-                        "[grow][grow]",
-//                        "[50%][50%]",
-                        "[grow]"
-                ));
-        panelImages.setBorder(new BevelBorder(BevelBorder.LOWERED));
+//        panelImages = new JPanel();
+//        panelImages.setLayout(
+//                new MigLayout(
+//                        "",
+//                        "[grow][grow]",//                        "[50%][50%]",
+//                        "[grow]"
+//                ));
+//        panelImages.setBorder(new BevelBorder(BevelBorder.LOWERED));
         panelImageInput.setBorder(new BevelBorder(BevelBorder.RAISED));
         panelImageInput.setLayout(new BorderLayout());
         panelImageOutput.setBorder(new BevelBorder(BevelBorder.RAISED));
@@ -169,7 +178,7 @@ public class ImageLabMainPanel extends JPanel {
         inputFrame.add(panelImageInput);
         inputFrame.setBounds(1, 1, 400, 300);
         inputFrame.setVisible(true);
-        panelImages.add(panelImageOutput, "growx, growy");
+//        panelImages.add(panelImageOutput, "growx, growy");
 
 //        panelImages.add(panelImageOutput, "growx, growy");
         final JFrame outputFrame = new JFrame("output");
@@ -180,7 +189,7 @@ public class ImageLabMainPanel extends JPanel {
         add(panelFilters, "growx");
         add(panelFiltersGlobalCommands, "wrap");
         add(panelParameters, "wrap, spanx 2, growx");
-        add(panelImages, "spanx 2, growx");
+//        add(panelImages, "spanx 2, growx");
     }
 
     public void redisplayAllFilters() {

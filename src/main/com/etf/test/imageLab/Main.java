@@ -18,10 +18,10 @@ public class Main {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
         topFrame = new JFrame("Image lab");
-        topFrame.setMinimumSize(new Dimension(1200, 800));
+        topFrame.setMinimumSize(new Dimension(1200, 300));
+        topFrame.setBounds(1, 350, 1200, 600);
         topFrame.getContentPane().add(new ImageLabMainPanel());
         topFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        topFrame.pack();
         topFrame.setVisible(true);
     }
 

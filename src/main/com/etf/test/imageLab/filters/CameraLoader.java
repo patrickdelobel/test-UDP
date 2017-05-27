@@ -14,7 +14,7 @@ import java.util.LinkedList;
  */
 public class CameraLoader extends AbstractFilter {
     VideoCapture videoCapture;
-    JSlider delay;
+    JSliderWithNameAndValue delay;
 
     public CameraLoader(JPanel mainCommandPanel, JPanel panelImageInput, JPanel panelImageOutput, LinkedList<AbstractFilter> mainList, ImageLabMainPanel.MousePopupListener mousePopupListener) {
         super(mainCommandPanel, panelImageInput, panelImageOutput, "camera", mainList, mousePopupListener);
@@ -32,12 +32,7 @@ public class CameraLoader extends AbstractFilter {
         videoCapture.set(Videoio.CAP_PROP_FRAME_HEIGHT, 240);
 
         //commandPanel is created already, add other parameters or commands
-        delay = new JSliderWithNameAndValue(20, 1000, 50, "delay between frames (ms)");
-        delay.setMajorTickSpacing(250);
-//        delay.setMinorTickSpacing(1);
-        delay.setPaintTicks(true);
-        delay.setPaintLabels(true);
-        commandPanel.add(delay, "w 55%");
+        delay = JSliderWithNameAndValue.addNewSliderToPanel(commandPanel, 20, 1000, 50, 100, "delay between frames (ms)");
 
         outputMat = new Mat();
         displayInput();
@@ -53,13 +48,6 @@ public class CameraLoader extends AbstractFilter {
             Thread.currentThread().interrupt();
         }
     }
-
-//    public void displayInput() {
-//        emptyInputDisplay();
-//
-//        panelImageInput.add(new JTextArea("camera"), BorderLayout.CENTER);
-//        panelImageInput.updateUI();
-//    }
 
     public void displayInput() {
         emptyInputDisplay();

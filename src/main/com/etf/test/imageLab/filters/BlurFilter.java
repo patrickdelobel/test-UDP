@@ -20,12 +20,7 @@ public class BlurFilter extends AbstractFilter {
         super(mainCommandPanel, panelImageInput, panelImageOutput, "blur", mainList, mousePopupListener);
 
         //commandPanel is created already, add other parameters or commands
-        ksize = new JSliderWithNameAndValue(1, 50, 3, "kernel size");
-        ksize.setMajorTickSpacing(10);
-//        delay.setMinorTickSpacing(1);
-        ksize.setPaintTicks(true);
-        ksize.setPaintLabels(true);
-        commandPanel.add(ksize, "w 55%");
+        ksize = JSliderWithNameAndValue.addNewSliderToPanel(commandPanel, 1, 50, 3, 10, "kernel size");
 
         outputMat = new Mat();
     }
