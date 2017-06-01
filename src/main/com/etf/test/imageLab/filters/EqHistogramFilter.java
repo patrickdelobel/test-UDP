@@ -13,9 +13,10 @@ import static org.opencv.imgproc.Imgproc.*;
 /**
  * Created by patrick on 15/05/17.
  */
-public class HistogramFilter extends AbstractFilter {
-    public HistogramFilter(JPanel mainCommandPanel, JPanel panelImageInput, JPanel panelImageOutput, LinkedList<AbstractFilter> mainList, ImageLabMainPanel.MousePopupListener mousePopupListener) {
-        super(mainCommandPanel, panelImageInput, panelImageOutput, "histogram", mainList, mousePopupListener);
+@Category("histogram")
+public class EqHistogramFilter extends AbstractFilter {
+    public EqHistogramFilter(JPanel mainCommandPanel, JPanel panelImageInput, JPanel panelImageOutput, LinkedList<AbstractFilter> mainList, ImageLabMainPanel.MousePopupListener mousePopupListener) {
+        super(mainCommandPanel, panelImageInput, panelImageOutput, "eq histogram", mainList, mousePopupListener);
 
         outputMat = new Mat();
     }
@@ -29,5 +30,10 @@ public class HistogramFilter extends AbstractFilter {
             cvtColor(previous.getOutputMat(), grayImage, COLOR_RGB2GRAY);
         }
         equalizeHist(grayImage, outputMat);
+    }
+
+    @Override
+    public String getClassification() {
+        return "histo";
     }
 }

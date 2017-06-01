@@ -1,6 +1,7 @@
 package com.etf.test.imageLab.filters;
 
 import com.etf.test.imageLab.ImageLabMainPanel;
+import com.etf.test.swingUtils.JSliderWithNameAndValue;
 import org.opencv.core.Mat;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.Videoio;
@@ -12,6 +13,7 @@ import java.util.LinkedList;
 /**
  * Created by patrick on 15/05/17.
  */
+@Category("input")
 public class CameraLoader extends AbstractFilter {
     VideoCapture videoCapture;
     JSliderWithNameAndValue delay;

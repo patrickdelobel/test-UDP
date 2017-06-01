@@ -2,6 +2,7 @@ package com.etf.test.imageLab.filters;
 
 import com.etf.test.imageLab.ImageLabMainPanel;
 import com.etf.test.swingUtils.VerticalJLabel;
+import com.sun.javafx.beans.IDProperty;
 import net.miginfocom.swing.MigLayout;
 import org.opencv.core.Mat;
 
@@ -10,12 +11,15 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
 /**
  * Created by patrick on 15/05/17.
  */
+@Category("none")
 public abstract class AbstractFilter {
     protected Mat outputMat;
 
@@ -38,37 +42,29 @@ public abstract class AbstractFilter {
      * all filters must be listed here!
      */
     public static AbstractFilter createNewFilter(JPanel mainCommandPanel, JPanel panelImageInput, JPanel panelImageOutput,
-                                          String filterClassName, LinkedList<AbstractFilter> mainList,
-                                          ImageLabMainPanel.MousePopupListener mousePopupListener) {
-
-        if (filterClassName.equals(CannyFilter.class.getSimpleName()))
-            return new CannyFilter(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
-        else if (filterClassName.equals(ImageLoader.class.getSimpleName()))
-            return new ImageLoader(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
-        else if (filterClassName.equals(HistogramFilter.class.getSimpleName()))
-            return new HistogramFilter(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
-        else if (filterClassName.equals(CameraLoader.class.getSimpleName()))
-            return new CameraLoader(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
-        else if (filterClassName.equals(BlurFilter.class.getSimpleName()))
-            return new BlurFilter(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
-        else if (filterClassName.equals(FindContourFilter.class.getSimpleName()))
-            return new FindContourFilter(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
-        else if (filterClassName.equals(NlMeansDenoisingFilter.class.getSimpleName()))
-            return new NlMeansDenoisingFilter(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
-        else if (filterClassName.equals(AdaptiveThresholdFilter.class.getSimpleName()))
-            return new AdaptiveThresholdFilter(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
-        else if (filterClassName.equals(LaplacianFilter.class.getSimpleName()))
-            return new LaplacianFilter(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
-        else if (filterClassName.equals(ThresholdFilter.class.getSimpleName()))
-            return new ThresholdFilter(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
-        else if (filterClassName.equals(ErodeFilter.class.getSimpleName()))
-            return new ErodeFilter(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
-        else if (filterClassName.equals(DilateFilter.class.getSimpleName()))
-            return new DilateFilter(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
-        else if (filterClassName.equals(MorphologyFilter.class.getSimpleName()))
-            return new MorphologyFilter(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener);
-
-        else throw new RuntimeException("not implemented");
+                                                 String filterClassName, LinkedList<AbstractFilter> mainList,
+                                                 ImageLabMainPanel.MousePopupListener mousePopupListener) {
+        Constructor declaredConstructor = null;
+        try {
+            Class classToInstanciate = Class.forName(AbstractFilter.class.getPackage().getName() + "." + filterClassName);
+            declaredConstructor = classToInstanciate.getDeclaredConstructor(JPanel.class, JPanel.class, JPanel.class, LinkedList.class, ImageLabMainPanel.MousePopupListener.class);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            throw new RuntimeException("not implemented A");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            throw new RuntimeException("not implemented B");
+        }
+        try {
+            return (AbstractFilter) (declaredConstructor.newInstance(mainCommandPanel, panelImageInput, panelImageOutput, mainList, mousePopupListener));
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        throw new RuntimeException("not implemented C");
     }
 
     public AbstractFilter(JPanel mainCommandPanel, JPanel panelImageInput, JPanel panelImageOutput,
@@ -224,10 +220,14 @@ public abstract class AbstractFilter {
     }
 
     public static void setZoomMode(boolean zoomMode) {
-        HistogramFilter.zoomMode = zoomMode;
+        EqHistogramFilter.zoomMode = zoomMode;
     }
 
     public String getCommandLabel() {
         return commandLabel;
+    }
+
+    public String getClassification() {
+        return "";
     }
 }

@@ -17,6 +17,7 @@ import static org.opencv.imgproc.Imgproc.*;
 /**
  * Created by patrick on 15/05/17.
  */
+@Category("contour")
 public class FindContourFilter extends AbstractFilter {
 //    int thresh = 100;
 //    int max_thresh = 255;
@@ -24,6 +25,7 @@ public class FindContourFilter extends AbstractFilter {
     public FindContourFilter(JPanel mainCommandPanel, JPanel panelImageInput, JPanel panelImageOutput, LinkedList<AbstractFilter> mainList, ImageLabMainPanel.MousePopupListener mousePopupListener) {
         super(mainCommandPanel, panelImageInput, panelImageOutput, "contour", mainList, mousePopupListener);
 
+        //TODO add parameters as sliders
     }
 
     public void run() {
@@ -38,15 +40,12 @@ public class FindContourFilter extends AbstractFilter {
         }
 
         ArrayList<MatOfPoint> contours = new ArrayList<>();
-//        ArrayList<MatOfPoint> hierarchy=new ArrayList<>();
         Mat hierarchy = new Mat();
 
         findContours(grayImage, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);
-        //Mat drawing = new Mat(previous.getOutputMat().size(), CV_8UC3);
         outputMat.setTo(new Scalar(0, 0, 0));
-        for (int i = 0; i < contours.size() && i < 1000; i++) {
+        for (int i = 0; i < contours.size() && i < 1000; i++) {//TODO limit to 1000 segments
             Scalar color = new Scalar(Math.random() * 256, Math.random() * 256, Math.random() * 256);
-            //  drawContours(drawing, contours, i, color, 2, 8, hierarchy, 0, new Point(0, 0));
             drawContours(outputMat, contours, i, color, 1, 8, hierarchy, 0, new Point(0, 0));
         }
     }

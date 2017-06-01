@@ -1,21 +1,20 @@
 package com.etf.test.imageLab.filters;
 
 import com.etf.test.imageLab.ImageLabMainPanel;
+import com.etf.test.swingUtils.JSliderWithNameAndValue;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.imgproc.Imgproc;
 
 import javax.swing.*;
-import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Hashtable;
 import java.util.LinkedList;
-import java.util.List;
 
 
 /**
  * Created by patrick on 15/05/17.
  */
+@Category("filter")
 public class MorphologyFilter extends AbstractFilter {
     JSliderWithNameAndValue iterations;
     JSliderWithNameAndValue operation;
@@ -32,7 +31,8 @@ public class MorphologyFilter extends AbstractFilter {
                         "CLOSE", 3,
                         "GRADIENT", 4,
                         "TOPHAT", 5,
-                        "BLACKHAT", 6
+                        "BLACKHAT", 6,
+                        "HITMISS", 7
                 )
         );
         outputMat = new Mat();

@@ -1,6 +1,7 @@
 package com.etf.test.imageLab.filters;
 
 import com.etf.test.imageLab.ImageLabMainPanel;
+import com.etf.test.swingUtils.JSliderWithNameAndValue;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
@@ -15,9 +16,11 @@ import static org.opencv.imgcodecs.Imgcodecs.CV_LOAD_IMAGE_GRAYSCALE;
 /**
  * Created by patrick on 15/05/17.
  */
+@Category("input")
 public class ImageLoader extends AbstractFilter {
     protected String fileName;
     JSliderWithNameAndValue desiredWidth;
+    JSliderWithNameAndValue sleepTime;
 
     public ImageLoader(JPanel mainCommandPanel, JPanel panelImageInput, JPanel panelImageOutput, LinkedList<AbstractFilter> mainList, ImageLabMainPanel.MousePopupListener mousePopupListener) {
         super(mainCommandPanel, panelImageInput, panelImageOutput, "open", mainList, mousePopupListener);
@@ -43,6 +46,7 @@ public class ImageLoader extends AbstractFilter {
         commandPanel.add(fileOpen);
 
         desiredWidth = JSliderWithNameAndValue.addNewSliderToPanel(commandPanel, 20, 1200, 320, 250, "desired width (px)");
+        sleepTime = JSliderWithNameAndValue.addNewSliderToPanel(commandPanel, 0, 1000, 100, 100, "sleep after load (ms)");
     }
 
     public void run() {
@@ -53,7 +57,7 @@ public class ImageLoader extends AbstractFilter {
         Imgproc.resize(outputMat, outputMat, new Size(desiredWidth.getValue(), desiredWidth.getValue() / ratio), 0, 0, Imgproc.INTER_LINEAR);
 
         try {
-            Thread.sleep(100);//10i/s in continuous mode
+            Thread.sleep(sleepTime.getValue());//10i/s in continuous mode
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }

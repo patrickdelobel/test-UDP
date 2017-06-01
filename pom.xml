@@ -77,6 +77,14 @@
             <version>1.0.19</version>
         </dependency>
 
+        <!--reflections used in image lab-->
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.11</version>
+        </dependency>
+
+        <!--test libraries-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

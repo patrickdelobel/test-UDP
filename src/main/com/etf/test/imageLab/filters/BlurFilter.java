@@ -1,6 +1,7 @@
 package com.etf.test.imageLab.filters;
 
 import com.etf.test.imageLab.ImageLabMainPanel;
+import com.etf.test.swingUtils.JSliderWithNameAndValue;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 
@@ -13,6 +14,7 @@ import static org.opencv.imgproc.Imgproc.*;
 /**
  * Created by patrick on 15/05/17.
  */
+@Category("filter")
 public class BlurFilter extends AbstractFilter {
     JSliderWithNameAndValue ksize;
 

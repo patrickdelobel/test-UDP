@@ -1,9 +1,8 @@
 package com.etf.test.imageLab;
 
-import com.etf.test.imageLab.filters.AbstractFilter;
-import com.etf.test.imageLab.filters.CameraLoader;
-import com.etf.test.imageLab.filters.DummyFilter;
+import com.etf.test.imageLab.filters.*;
 import net.miginfocom.swing.MigLayout;
+import org.reflections.Reflections;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -11,8 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * Created by patrick on 15/05/17.
@@ -35,7 +33,7 @@ public class ImageLabMainPanel extends JPanel {
 //                "[100%]",
                 "[90%][10%]",
 //                "[10%:10%:20%][30%:30%:80%][30%:80%:100%]"
-                "[20%][30%:60%:80%]"
+                "[20%][80%:80%:80%]"
         ));
 
         //create parameters panel
@@ -56,6 +54,42 @@ public class ImageLabMainPanel extends JPanel {
         popup.add(insertBefore);
         popup.add(insertAfter);
         popup.add(delete);
+        HashMap<String, JMenu> categories = new HashMap<>();
+        HashMap<String, JMenu> categoriesCopy = new HashMap<>();
+
+        //create filters
+        //TODO temp DummyFilter dummyFilter = new DummyFilter(panelParameters, panelImageInput, panelImageOutput, filters, mousePopupListener);
+//        filters.add(dummyFilter);//start empty
+
+        java.util.List<String> predef1 = Arrays.asList("ImageLoader", "BlurFilter", "AdaptiveThresholdFilter", "CannyFilter", "FindContourFilter");
+        java.util.List<String> predef2 = Arrays.asList("CameraLoader", "BlurFilter", "LaplacianFilter");
+        java.util.List<String> predef3 = Arrays.asList("ImageLoader", "BlurFilter", "LaplacianFilter");
+        java.util.List<String> predef4 = Arrays.asList("ImageLoader", "BlurFilter", "AdaptiveThresholdFilter", "ConnectedComponentsFilter");
+        for (String filter : predef4) {
+            filters.add(AbstractFilter.createNewFilter(panelParameters, panelImageInput, panelImageOutput, filter, filters, mousePopupListener));
+        }
+        JMenuItem item;
+        Reflections reflections = new Reflections(AbstractFilter.class.getPackage().getName());
+        Set<Class<? extends AbstractFilter>> filterClasses = reflections.getSubTypesOf(AbstractFilter.class);
+
+        SortedSet<String> filterClassesSorted = new TreeSet<>();
+        for (Class aClass : filterClasses) {
+            if (!aClass.getSimpleName().equalsIgnoreCase("DummyFilter")) {
+                String cat = aClass.getAnnotation(Category.class).toString().split("=")[1].replace(")", "");
+                if (!categories.containsKey(cat)) {
+                    categories.put(cat, new JMenu(cat));
+                    categoriesCopy.put(cat, new JMenu(cat));
+                }
+                filterClassesSorted.add(cat + "/" + aClass.getSimpleName());
+//                filterClassesSorted.add(aClass.getSimpleName());
+            }
+        }
+        for (JMenu jMenu : categories.values()) {
+            insertBefore.add(jMenu);
+        }
+        for (JMenu jMenu : categoriesCopy.values()) {
+            insertAfter.add(jMenu);
+        }
         ActionListener menuListener = event -> {
             int indexOfFilter = filters.indexOf(currentAbstractFilterClicked);
 
@@ -69,7 +103,7 @@ public class ImageLabMainPanel extends JPanel {
                         filters.add(indexOfFilter, new DummyFilter(panelParameters, panelImageInput, panelImageOutput, filters, mousePopupListener));
                 }
             } else {
-                boolean before = ((JMenu) ((JPopupMenu) ((JMenuItem) event.getSource()).getParent()).getInvoker()).getText().contains("before");
+                boolean before = ((JMenu)((JPopupMenu) ((JPopupMenu) ((JMenuItem) event.getSource()).getParent()).getInvoker().getParent()).getInvoker()).getText().contains("before");
 
                 if (currentAbstractFilterClicked.getCommandLabel().equalsIgnoreCase("dummy")) {
                     filters.remove(currentAbstractFilterClicked);
@@ -84,31 +118,13 @@ public class ImageLabMainPanel extends JPanel {
             redisplayAllFilters();
         };
 
-        //create filters
-        //TODO temp DummyFilter dummyFilter = new DummyFilter(panelParameters, panelImageInput, panelImageOutput, filters, mousePopupListener);
-//        filters.add(dummyFilter);
-//
-//        CameraLoader cameraLoader = new CameraLoader(panelParameters, panelImageInput, panelImageOutput, filters, mousePopupListener);
-//        filters.add(cameraLoader);
+        for (String filterName : filterClassesSorted) {
+            String cat = filterName.split("/")[0];
+            String menu = filterName.split("/")[1];
 
-//        ImageLoader inp = new ImageLoader(panelParameters, panelImageInput, panelImageOutput, filters, mousePopupListener);
-//        filters.add(inp);
-
-        java.util.List<String> predef1 = Arrays.asList("ImageLoader", "BlurFilter", "CannyFilter", "FindContourFilter");
-        java.util.List<String> predef2 = Arrays.asList("CameraLoader", "BlurFilter", "LaplacianFilter");
-        java.util.List<String> predef3 = Arrays.asList("ImageLoader", "BlurFilter", "LaplacianFilter");
-        for (String filter : predef3) {
-            filters.add(AbstractFilter.createNewFilter(panelParameters, panelImageInput, panelImageOutput, filter, filters, mousePopupListener));
-        }
-
-        JMenuItem item;
-        for (String filterName : Arrays.asList(
-                "AdaptiveThresholdFilter", "BlurFilter", "CannyFilter", "DilateFilter", "ErodeFilter", "FindContourFilter", "HistogramFilter",
-                "LaplacianFilter", "MorphologyFilter", "NlMeansDenoisingFilter", "ThresholdFilter",
-                "CameraLoader", "ImageLoader")) {
-            insertBefore.add(item = new JMenuItem(filterName));
+            categories.get(cat).add(item = new JMenuItem(menu));
             item.addActionListener(menuListener);
-            insertAfter.add(item = new JMenuItem(filterName));
+            categoriesCopy.get(cat).add(item = new JMenuItem(menu));
             item.addActionListener(menuListener);
         }
         delete.addActionListener(menuListener);
@@ -188,7 +204,7 @@ public class ImageLabMainPanel extends JPanel {
 
         add(panelFilters, "growx");
         add(panelFiltersGlobalCommands, "wrap");
-        add(panelParameters, "wrap, spanx 2, growx");
+        add(panelParameters, "wrap, spanx 2, grow");
 //        add(panelImages, "spanx 2, growx");
     }
 

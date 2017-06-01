@@ -1,8 +1,6 @@
-package com.etf.test.imageLab.filters;
+package com.etf.test.swingUtils;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 /**
  * Created by patrick on 26/05/17.

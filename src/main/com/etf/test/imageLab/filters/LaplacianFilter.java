@@ -1,6 +1,7 @@
 package com.etf.test.imageLab.filters;
 
 import com.etf.test.imageLab.ImageLabMainPanel;
+import com.etf.test.swingUtils.JSliderWithNameAndValue;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
@@ -15,6 +16,7 @@ import static org.opencv.imgproc.Imgproc.cvtColor;
 /**
  * Created by patrick on 15/05/17.
  */
+@Category("contour")
 public class LaplacianFilter extends AbstractFilter {
     JSliderWithNameAndValue scale;
     JSliderWithNameAndValue delta;

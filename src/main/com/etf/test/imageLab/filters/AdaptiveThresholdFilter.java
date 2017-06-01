@@ -1,6 +1,7 @@
 package com.etf.test.imageLab.filters;
 
 import com.etf.test.imageLab.ImageLabMainPanel;
+import com.etf.test.swingUtils.JSliderWithNameAndValue;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
@@ -12,6 +13,7 @@ import java.util.LinkedList;
 /**
  * Created by patrick on 15/05/17.
  */
+@Category("histogram")
 public class AdaptiveThresholdFilter extends AbstractFilter {
     JSliderWithNameAndValue adaptiveMethod;
     JSliderWithNameAndValue thresholdType;
@@ -24,7 +26,7 @@ public class AdaptiveThresholdFilter extends AbstractFilter {
         adaptiveMethod = JSliderWithNameAndValue.addNewSliderToPanel(commandPanel, 0, 1, 1, 1, "adaptiveMethod");
         thresholdType = JSliderWithNameAndValue.addNewSliderToPanel(commandPanel, 0, 1, 1, 1, "thresholdType");
         blockSize = JSliderWithNameAndValue.addNewSliderToPanel(commandPanel, 1, 50, 5, 10, "blockSize (*2+1)");
-        constant = JSliderWithNameAndValue.addNewSliderToPanel(commandPanel, 1, 100, 15, 10, "constant (/10)");
+        constant = JSliderWithNameAndValue.addNewSliderToPanel(commandPanel, -255, 255, 15, 20, "constant (/10)");
 
         setTickLabels(thresholdType,
                 Arrays.asList("ERODE", 0,
@@ -42,5 +44,10 @@ public class AdaptiveThresholdFilter extends AbstractFilter {
     public void run() {
         Imgproc.adaptiveThreshold(getPrevious().getOutputMat(), outputMat, 255d, adaptiveMethod.getValue(), thresholdType.getValue(),
                 blockSize.getValue() * 2 + 1, constant.getValue() / 10d);
+    }
+
+    @Override
+    public String getClassification() {
+        return "histo";
     }
 }
