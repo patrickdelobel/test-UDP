@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>etf</groupId>
-    <artifactId>testUdp</artifactId>
+    <artifactId>truckControl</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -13,7 +13,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
-    <name>testUdp</name>
+    <name>truck control app</name>
     <url>http://maven.apache.org</url>
 
     <dependencies>
