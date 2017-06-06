@@ -2,7 +2,7 @@
   <artifact type="jar" name="testUdp:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/testUdp_jar</output-path>
     <root id="archive" name="testUdp.jar">
-      <element id="module-output" name="testUdp" />
+      <element id="module-output" name="truck" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/aeron/aeron-client/1.2.5/aeron-client-1.2.5.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jfree/jcommon/1.0.23/jcommon-1.0.23.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/sf/jchart2d/jchart2d/3.3.2/jchart2d-3.3.2.jar" path-in-jar="/" />

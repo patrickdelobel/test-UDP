@@ -35,7 +35,7 @@ public class MainPanel {
 //        ));
 //        panelDisplay = new JStatDisplayJChart2D();
 //        panelDisplay = new JStatDisplayJFreeChart();
-        final JStatDisplayJFreeChart2 jStatDisplayJFreeChart2 = new JStatDisplayJFreeChart2(1000, Main.sharedData.getReceiveStat(),"rate");
+        final JStatDisplayJFreeChart2 jStatDisplayJFreeChart2 = new JStatDisplayJFreeChart2(Main.sharedData.getReceiveStat(),"rate");
         final JComponent chart = jStatDisplayJFreeChart2.createChart();
         panelDisplay = new JPanel();
         panelDisplay.setLayout(
@@ -55,14 +55,14 @@ public class MainPanel {
         panelRight.setBorder(new BevelBorder(BevelBorder.LOWERED));
 
 
-        final JRateDisplay jRateDisplay = new JRateDisplay(500, Main.sharedData.getSendStat(), "Rate sent");
+        final JRateDisplay jRateDisplay = new JRateDisplay(Main.sharedData.getSendStat(), "Rate sent");
 //        Model model = new Model();
 //        model.setRange(0, 100);
 //        final AbstractGauge testGauge = new RadialBargraph(model);
 //        testGauge.setUnitString("Mb/s");
 //        testGauge.setTitle("Sent rate");
         panelRight.add(jRateDisplay.createChart(), "grow,wrap");
-        final JRateDisplay jRateDisplayRec = new JRateDisplay(500, Main.sharedData.getReceiveStat(), "Rate rec");
+        final JRateDisplay jRateDisplayRec = new JRateDisplay(Main.sharedData.getReceiveStat(), "Rate rec");
         panelRight.add(jRateDisplayRec.createChart(), "grow");
 
         CmdPanel cmdPanel = new CmdPanel();

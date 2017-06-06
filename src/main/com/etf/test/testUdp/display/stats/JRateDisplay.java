@@ -14,8 +14,8 @@ public class JRateDisplay extends StatDisplayItem {
     protected AbstractGauge rateGauge;
 
 
-    public JRateDisplay(long displayEveryMs, Stat stat, String uniqueName) {
-        super(displayEveryMs, stat, uniqueName);
+    public JRateDisplay(Stat stat, String uniqueName) {
+        super(stat, uniqueName);
     }
 
     @Override

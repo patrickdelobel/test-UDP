@@ -1,5 +1,6 @@
-package com.etf.test.testUdp.display.stats;
+package com.etf.test.testPid;
 
+import com.etf.test.testUdp.display.stats.StatDisplayItem;
 import com.etf.test.testUdp.stat.Stat;
 import org.apache.commons.lang3.time.DateUtils;
 import org.jfree.chart.ChartFactory;
@@ -16,26 +17,23 @@ import java.util.Date;
 /**
  * Created by patrick on 08/05/17.
  */
-public class JStatDisplayJFreeChart2 extends StatDisplayItem {
-    private static final String TITLE = "Sent data";
+public class JSimulDisplay {
+    private static final String TITLE = "Simulation truck speed";
     private static final int COUNT = 2 * 60;
     protected DynamicTimeSeriesCollection dataset;
 
-    public JStatDisplayJFreeChart2(Stat stat, String uniqueName) {
-        super(stat, uniqueName);
+    public JSimulDisplay() {
     }
 
-    @Override
     public JComponent createChart() {
-        dataset = new DynamicTimeSeriesCollection(3, COUNT, new Second());
+        dataset = new DynamicTimeSeriesCollection(2, COUNT, new Second());
         Date targetTime = new Date(); //now
         targetTime = DateUtils.addSeconds(targetTime, -COUNT - 1); //start of graph is current time, data will be added at the end
         dataset.setTimeBase(new Second(targetTime));
-        dataset.addSeries(new float[COUNT], 0, "Min");
-        dataset.addSeries(new float[COUNT], 1, "Max");
-        dataset.addSeries(new float[COUNT], 2, "MAvg");
+        dataset.addSeries(new float[COUNT], 0, "Set Point");
+        dataset.addSeries(new float[COUNT], 1, "Process Value");
         final JFreeChart chart = ChartFactory.createTimeSeriesChart(
-                TITLE, "hh:mm:ss", "milliSeconds", dataset, true, true, false);
+                TITLE, "hh:mm:ss", "speed (km/h)", dataset, true, true, false);
         final XYPlot plot = chart.getXYPlot();
         ValueAxis domain = plot.getDomainAxis();
         domain.setAutoRange(true);
@@ -44,13 +42,11 @@ public class JStatDisplayJFreeChart2 extends StatDisplayItem {
         return new ChartPanel(chart);
     }
 
-    @Override
-    public void displayNextData() {
-        float[] newData = new float[3];
+    public void displayNextData(double sp, double pv) {
+        float[] newData = new float[2];
 
-        newData[0] = stat.getMin() / 1000f;
-        newData[1] = stat.getMax() / 1000f;
-        newData[2] = (float) stat.getMavg() / 1000f;
+        newData[0] = (float) sp;
+        newData[1] = (float) pv;
         SwingUtilities.invokeLater(() -> {
             dataset.advanceTime();
             dataset.appendData(newData);
